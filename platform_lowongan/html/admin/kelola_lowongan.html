@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Lowongan - Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('admin.dashboard') }}" class="nav-item">Dashboard</a>
+                <a href="{{ url_for('admin.kelola_pengguna') }}" class="nav-item">Kelola Pengguna</a>
+                <a href="{{ url_for('admin.kelola_lowongan') }}" class="nav-item active">Kelola Lowongan</a>
+                <a href="{{ url_for('admin.logout') }}" class="nav-item logout">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>Kelola Lowongan</h1>
+                <div class="user-info">
+                    <span>Halo, {{ current_user.nama }}</span>
+                </div>
+            </header>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Tabel Daftar Lowongan -->
+            <div class="card">
+                <h2>Daftar Semua Lowongan</h2>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Judul Lowongan</th>
+                                <th>Perusahaan</th>
+                                <th>Pelamar</th>
+                                <th>Lokasi</th>
+                                <th>Tipe</th>
+                                <th>Status</th>
+                                <th>Dibuat</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for lowongan in lowongan_list %}
+                            <tr>
+                                <td>{{ lowongan.id }}</td>
+                                <td>{{ lowongan.judul }}</td>
+                                <td>{{ lowongan.perusahaan.nama_perusahaan }}</td>
+                                <td>{{ lowongan.lamaran.count() }}</td>
+                                <td>{{ lowongan.lokasi or '-' }}</td>
+                                <td>
+                                    <span class="badge badge-type">{{ lowongan.tipe_pekerjaan or '-' }}</span>
+                                </td>
+                                <td>
+                                    {% if lowongan.status == 'aktif' %}
+                                        <span class="status-active">Aktif</span>
+                                    {% elif lowongan.status == 'tutup' %}
+                                        <span class="status-closed">Tutup</span>
+                                    {% else %}
+                                        <span class="status-draft">Draft</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ lowongan.created_at.strftime('%d/%m/%Y') }}</td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('admin.hapus_lowongan', lowongan_id=lowongan.id) }}" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus lowongan ini?')">
+                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="9" class="text-center">Belum ada lowongan.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

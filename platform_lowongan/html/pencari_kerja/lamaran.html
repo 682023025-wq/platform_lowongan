@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lamaran Saya - Platform Lowongan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pencari_kerja/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <h2>{{ current_user.username }}</h2>
+            <ul>
+                <li><a href="{{ url_for('pencari_kerja.dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('pencari_kerja.cari_lowongan') }}">Cari Lowongan</a></li>
+                <li><a href="{{ url_for('pencari_kerja.lamaran_saya') }}" class="active">Lamaran Saya</a></li>
+                <li><a href="{{ url_for('pencari_kerja.logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <h1>Lamaran Saya</h1>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% if lamaran_list %}
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Judul Lowongan</th>
+                            <th>Perusahaan</th>
+                            <th>Tanggal Lamaran</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lamaran in lamaran_list %}
+                        <tr>
+                            <td>{{ lamaran.lowongan.judul }}</td>
+                            <td>{{ lamaran.lowongan.perusahaan.nama_perusahaan }}</td>
+                            <td>{{ lamaran.tanggal_lamaran.strftime('%d %B %Y') }}</td>
+                            <td>
+                                <span class="status status-{{ lamaran.status }}">{{ lamaran.status }}</span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('pencari_kerja.detail_lowongan', lowongan_id=lamaran.lowongan.id) }}" class="btn-small">Lihat Detail</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Anda belum melamar lowongan apapun.</p>
+                <a href="{{ url_for('pencari_kerja.cari_lowongan') }}" class="btn">Cari Lowongan</a>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>

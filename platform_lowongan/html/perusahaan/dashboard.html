@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Perusahaan - Platform Lowongan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perusahaan/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <h2>{{ perusahaan.nama_perusahaan }}</h2>
+            <ul>
+                <li><a href="{{ url_for('perusahaan.dashboard') }}" class="active">Dashboard</a></li>
+                <li><a href="{{ url_for('perusahaan.profil_perusahaan') }}">Profil Perusahaan</a></li>
+                <li><a href="{{ url_for('perusahaan.buat_lowongan') }}">Buat Lowongan</a></li>
+                <li><a href="{{ url_for('perusahaan.logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <h1>Dashboard</h1>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Lowongan</h3>
+                    <p>{{ stats|length }}</p>
+                </div>
+            </div>
+            
+            <h2>Status Lamaran per Lowongan</h2>
+            {% if stats %}
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Judul Lowongan</th>
+                            <th>Lokasi</th>
+                            <th>Tipe</th>
+                            <th>Jumlah Lamaran</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in stats %}
+                        <tr>
+                            <td>{{ stat.lowongan.judul }}</td>
+                            <td>{{ stat.lowongan.lokasi }}</td>
+                            <td>{{ stat.lowongan.tipe_pekerjaan }}</td>
+                            <td>{{ stat.jumlah_lamaran }}</td>
+                            <td>
+                                <a href="{{ url_for('perusahaan.kelola_lamaran', lowongan_id=stat.lowongan.id) }}" class="btn">Kelola Lamaran</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Belum ada lowongan yang dibuat.</p>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>

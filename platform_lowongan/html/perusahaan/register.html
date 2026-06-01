@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Perusahaan - Platform Lowongan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perusahaan/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>Daftar Perusahaan</h1>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                
+                <div class="form-group">
+                    <h3>Informasi Akun</h3>
+                    <label for="username">{{ form.username.label.text }}</label>
+                    {{ form.username() }}
+                    {% for error in form.username.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">{{ form.email.label.text }}</label>
+                    {{ form.email() }}
+                    {% for error in form.email.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">{{ form.password.label.text }}</label>
+                    {{ form.password() }}
+                    {% for error in form.password.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm_password">{{ form.confirm_password.label.text }}</label>
+                    {{ form.confirm_password() }}
+                    {% for error in form.confirm_password.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    <h3>Informasi Perusahaan</h3>
+                    <label for="nama_perusahaan">{{ form.nama_perusahaan.label.text }}</label>
+                    {{ form.nama_perusahaan() }}
+                    {% for error in form.nama_perusahaan.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="bidang">{{ form.bidang.label.text }}</label>
+                    {{ form.bidang() }}
+                    {% for error in form.bidang.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="deskripsi">{{ form.deskripsi.label.text }}</label>
+                    {{ form.deskripsi() }}
+                    {% for error in form.deskripsi.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="website">{{ form.website.label.text }}</label>
+                    {{ form.website() }}
+                    {% for error in form.website.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="alamat">{{ form.alamat.label.text }}</label>
+                    {{ form.alamat() }}
+                    {% for error in form.alamat.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.submit() }}
+                </div>
+            </form>
+            
+            <p class="login-link">Sudah punya akun? <a href="{{ url_for('perusahaan.login') }}">Login di sini</a></p>
+        </div>
+    </div>
+</body>
+</html>

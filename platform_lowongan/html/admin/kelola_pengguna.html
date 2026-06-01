@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Pengguna - Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('admin.dashboard') }}" class="nav-item">Dashboard</a>
+                <a href="{{ url_for('admin.kelola_pengguna') }}" class="nav-item active">Kelola Pengguna</a>
+                <a href="{{ url_for('admin.kelola_lowongan') }}" class="nav-item">Kelola Lowongan</a>
+                <a href="{{ url_for('admin.logout') }}" class="nav-item logout">Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>Kelola Pengguna</h1>
+                <div class="user-info">
+                    <span>Halo, {{ current_user.nama }}</span>
+                </div>
+            </header>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Form Tambah Pengguna -->
+            <div class="card">
+                <h2>Tambah Pengguna Baru</h2>
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            {{ form.username.label }}
+                            {{ form.username(class="form-control", placeholder="Username") }}
+                            {% for error in form.username.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.email.label }}
+                            {{ form.email(class="form-control", placeholder="Email") }}
+                            {% for error in form.email.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            {{ form.password.label }}
+                            {{ form.password(class="form-control", placeholder="Password") }}
+                            {% for error in form.password.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.confirm_password.label }}
+                            {{ form.confirm_password(class="form-control", placeholder="Konfirmasi Password") }}
+                            {% for error in form.confirm_password.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            {{ form.role.label }}
+                            {{ form.role(class="form-control") }}
+                            {% for error in form.role.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tabel Daftar Pengguna -->
+            <div class="card">
+                <h2>Daftar Pengguna</h2>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Dibuat</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.nama }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <span class="badge badge-{{ user.role }}">
+                                        {{ user.role }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if user.is_active %}
+                                        <span class="status-active">Aktif</span>
+                                    {% else %}
+                                        <span class="status-inactive">Nonaktif</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.created_at.strftime('%d/%m/%Y') }}</td>
+                                <td>
+                                    {% if user.role != 'admin' %}
+                                    <form method="POST" action="{{ url_for('admin.hapus_pengguna', user_id=user.id) }}" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus pengguna ini?')">
+                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    </form>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

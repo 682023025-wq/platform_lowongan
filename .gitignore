@@ -1,33 +1,72 @@
 ```
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
 .Python
-env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 venv/
+env/
+ENV/
 .venv/
+.env/
+.ENV/
+.venv.bak/
+env.bak/
+
+# Logs
+*.log
+logs/
+
+# Coverage reports
+.coverage
+coverage/
+htmlcov/
+.tox/
+.nox/
+
+# Environment variables
 .env
 .env.local
 .env.*
 
-# Build and distribution artifacts
-build/
-dist/
-*.egg-info/
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
 
-# Testing
-.coverage
-coverage/
-htmlcov/
-.pytest_cache/
-.mypy_cache/
-
-# Logs
-*.log
-
-# OS generated files
+# OS
 .DS_Store
 Thumbs.db
+
+# Testing
+.pytest_cache/
+.mypy_cache/
+.hypothesis/
+
+# Build artifacts (if any Python builds occur)
+*.o
+*.obj
+*.out
+*.exe
+*.dll
+*.so
+*.a
 ```

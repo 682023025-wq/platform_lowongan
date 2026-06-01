@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Lamaran - Platform Lowongan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perusahaan/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <h2>{{ session.get('nama_perusahaan', 'Perusahaan') }}</h2>
+            <ul>
+                <li><a href="{{ url_for('perusahaan.dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('perusahaan.profil_perusahaan') }}">Profil Perusahaan</a></li>
+                <li><a href="{{ url_for('perusahaan.buat_lowongan') }}">Buat Lowongan</a></li>
+                <li><a href="{{ url_for('perusahaan.logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <h1>Kelola Lamaran - {{ lowongan.judul }}</h1>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <div class="lowongan-info">
+                <p><strong>Lokasi:</strong> {{ lowongan.lokasi }}</p>
+                <p><strong>Tipe:</strong> {{ lowongan.tipe_pekerjaan }}</p>
+            </div>
+            
+            {% if lamaran_list %}
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nama Pelamar</th>
+                            <th>Email</th>
+                            <th>Tanggal Lamaran</th>
+                            <th>Status</th>
+                            <th>CV</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lamaran in lamaran_list %}
+                        <tr>
+                            <td>{{ lamaran.pencari_kerja.username }}</td>
+                            <td>{{ lamaran.pencari_kerja.email }}</td>
+                            <td>{{ lamaran.tanggal_lamaran.strftime('%d %B %Y') }}</td>
+                            <td>
+                                <span class="status status-{{ lamaran.status }}">{{ lamaran.status }}</span>
+                            </td>
+                            <td>
+                                {% if lamaran.cv_path %}
+                                    <a href="{{ url_for('download_cv', filename=lamaran.cv_path) }}" class="btn-small">Download CV</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ url_for('perusahaan.update_status_lamaran', lamaran_id=lamaran.id) }}" style="display: inline;">
+                                    <select name="status">
+                                        <option value="pending" {% if lamaran.status == 'pending' %}selected{% endif %}>Pending</option>
+                                        <option value="diterima" {% if lamaran.status == 'diterima' %}selected{% endif %}>Diterima</option>
+                                        <option value="ditolak" {% if lamaran.status == 'ditolak' %}selected{% endif %}>Ditolak</option>
+                                    </select>
+                                    <button type="submit" class="btn-small">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Belum ada lamaran untuk lowongan ini.</p>
+            {% endif %}
+            
+            <a href="{{ url_for('perusahaan.dashboard') }}" class="btn">Kembali ke Dashboard</a>
+        </main>
+    </div>
+</body>
+</html>

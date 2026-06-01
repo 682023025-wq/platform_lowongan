@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Lowongan - Platform Lowongan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pencari_kerja/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <h2>{{ current_user.username }}</h2>
+            <ul>
+                <li><a href="{{ url_for('pencari_kerja.dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('pencari_kerja.cari_lowongan') }}">Cari Lowongan</a></li>
+                <li><a href="{{ url_for('pencari_kerja.lamaran_saya') }}">Lamaran Saya</a></li>
+                <li><a href="{{ url_for('pencari_kerja.logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <h1>{{ lowongan.judul }}</h1>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <div class="lowongan-detail">
+                <div class="info-section">
+                    <h2>Informasi Lowongan</h2>
+                    <p><strong>Perusahaan:</strong> {{ perusahaan.nama_perusahaan }}</p>
+                    <p><strong>Lokasi:</strong> {{ lowongan.lokasi }}</p>
+                    <p><strong>Tipe Pekerjaan:</strong> {{ lowongan.tipe_pekerjaan }}</p>
+                    {% if lowongan.gaji_min and lowongan.gaji_max %}
+                        <p><strong>Gaji:</strong> Rp {{ "{:,.0f}".format(lowongan.gaji_min) }} - Rp {{ "{:,.0f}".format(lowongan.gaji_max) }}</p>
+                    {% endif %}
+                    <p><strong>Tanggal Dibuat:</strong> {{ lowongan.tanggal_dibuat.strftime('%d %B %Y') }}</p>
+                </div>
+                
+                <div class="description-section">
+                    <h2>Deskripsi Pekerjaan</h2>
+                    <p>{{ lowongan.deskripsi }}</p>
+                </div>
+                
+                <div class="requirements-section">
+                    <h2>Persyaratan</h2>
+                    <p>{{ lowongan.persyaratan }}</p>
+                </div>
+                
+                <div class="action-section">
+                    {% if sudah_melamar %}
+                        <p class="info-message">Anda sudah melamar untuk lowongan ini.</p>
+                    {% else %}
+                        <a href="{{ url_for('pencari_kerja.lamar', lowongan_id=lowongan.id) }}" class="btn btn-large">Lamar Sekarang</a>
+                    {% endif %}
+                    <a href="{{ url_for('pencari_kerja.cari_lowongan') }}" class="btn btn-secondary">Kembali ke Pencarian</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

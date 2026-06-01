@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cari Lowongan - Platform Lowongan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pencari_kerja/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <h2>{{ current_user.username }}</h2>
+            <ul>
+                <li><a href="{{ url_for('pencari_kerja.dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('pencari_kerja.cari_lowongan') }}" class="active">Cari Lowongan</a></li>
+                <li><a href="{{ url_for('pencari_kerja.lamaran_saya') }}">Lamaran Saya</a></li>
+                <li><a href="{{ url_for('pencari_kerja.logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <h1>Cari Lowongan</h1>
+            
+            <form class="search-form" method="GET" action="">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="q">Kata Kunci</label>
+                        <input type="text" name="q" id="q" value="{{ query }}" placeholder="Judul lowongan...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lokasi">Lokasi</label>
+                        <input type="text" name="lokasi" id="lokasi" value="{{ lokasi }}" placeholder="Contoh: Jakarta">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tipe">Tipe Pekerjaan</label>
+                        <select name="tipe" id="tipe">
+                            <option value="">Semua Tipe</option>
+                            <option value="full_time" {% if tipe == 'full_time' %}selected{% endif %}>Full Time</option>
+                            <option value="part_time" {% if tipe == 'part_time' %}selected{% endif %}>Part Time</option>
+                            <option value="contract" {% if tipe == 'contract' %}selected{% endif %}>Contract</option>
+                            <option value="internship" {% if tipe == 'internship' %}selected{% endif %}>Internship</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn">Cari</button>
+                    </div>
+                </div>
+            </form>
+            
+            {% if lowongan_list %}
+                <div class="lowongan-grid">
+                    {% for lowongan in lowongan_list %}
+                    <div class="lowongan-card">
+                        <h3>{{ lowongan.judul }}</h3>
+                        <p class="perusahaan">{{ lowongan.perusahaan.nama_perusahaan }}</p>
+                        <p class="lokasi">{{ lowongan.lokasi }}</p>
+                        <p class="tipe">{{ lowongan.tipe_pekerjaan }}</p>
+                        {% if lowongan.gaji_min and lowongan.gaji_max %}
+                            <p class="gaji">Rp {{ "{:,.0f}".format(lowongan.gaji_min) }} - Rp {{ "{:,.0f}".format(lowongan.gaji_max) }}</p>
+                        {% endif %}
+                        <a href="{{ url_for('pencari_kerja.detail_lowongan', lowongan_id=lowongan.id) }}" class="btn">Lihat Detail</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Tidak ada lowongan yang ditemukan.</p>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>

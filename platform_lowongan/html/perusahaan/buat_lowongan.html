@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Lowongan - Platform Lowongan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perusahaan/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <h2>{{ session.get('nama_perusahaan', 'Perusahaan') }}</h2>
+            <ul>
+                <li><a href="{{ url_for('perusahaan.dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('perusahaan.profil_perusahaan') }}">Profil Perusahaan</a></li>
+                <li><a href="{{ url_for('perusahaan.buat_lowongan') }}" class="active">Buat Lowongan</a></li>
+                <li><a href="{{ url_for('perusahaan.logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+        
+        <main class="main-content">
+            <h1>Buat Lowongan Baru</h1>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                
+                <div class="form-group">
+                    <label for="judul">{{ form.judul.label.text }}</label>
+                    {{ form.judul() }}
+                    {% for error in form.judul.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="deskripsi">{{ form.deskripsi.label.text }}</label>
+                    {{ form.deskripsi() }}
+                    {% for error in form.deskripsi.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="persyaratan">{{ form.persyaratan.label.text }}</label>
+                    {{ form.persyaratan() }}
+                    {% for error in form.persyaratan.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="lokasi">{{ form.lokasi.label.text }}</label>
+                    {{ form.lokasi() }}
+                    {% for error in form.lokasi.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="tipe_pekerjaan">{{ form.tipe_pekerjaan.label.text }}</label>
+                    {{ form.tipe_pekerjaan() }}
+                    {% for error in form.tipe_pekerjaan.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gaji_min">{{ form.gaji_min.label.text }}</label>
+                        {{ form.gaji_min() }}
+                        {% for error in form.gaji_min.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gaji_max">{{ form.gaji_max.label.text }}</label>
+                        {{ form.gaji_max() }}
+                        {% for error in form.gaji_max.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    {{ form.submit() }}
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
+</html>

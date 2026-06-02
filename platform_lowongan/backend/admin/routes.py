@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from backend.admin.forms import LoginForm, CreateUserForm
-from backend.models import db, User, Perusahaan, Lowongan, Lamaran
+from admin.forms import LoginForm, CreateUserForm
+from models import db, User, Perusahaan, Lowongan, Lamaran
 from functools import wraps
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')

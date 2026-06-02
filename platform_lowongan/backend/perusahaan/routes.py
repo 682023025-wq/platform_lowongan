@@ -3,9 +3,9 @@ from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
-from backend.perusahaan.forms import RegisterForm, LoginForm, ProfilForm, LowonganForm
-from backend.models import db, User, Perusahaan, Lowongan, Lamaran
-from backend.config import Config
+from perusahaan.forms import RegisterForm, LoginForm, ProfilForm, LowonganForm
+from models import db, User, Perusahaan, Lowongan, Lamaran
+from config import Config
 
 perusahaan_bp = Blueprint('perusahaan', __name__, url_prefix='/perusahaan')
 
